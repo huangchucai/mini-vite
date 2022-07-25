@@ -10,6 +10,7 @@ import fs from 'fs-extra'
 // 用来开发打印 debug 日志的库
 import createDebug from "debug";
 import path from "path";
+import { normalizePath } from '../utils'
 
 const debug = createDebug("dev");
 
@@ -43,25 +44,34 @@ export function preBundlePlugin(deps: Set<string>): Plugin {
             const id = loadInfo.path
             const root = process.cwd()
             const entryPath = resolve.sync(id, {basedir: root})
+
+
             const code = await fs.readFile(entryPath, 'utf-8')
-            const [imports, exports] = await parse(code)
-
-
+            const [imports, exports] = parse(code)
             let proxyModule = []
+
+            let relativePath = normalizePath(path.relative(root, entryPath))
+            if (
+                !relativePath.startsWith('./') &&
+                !relativePath.startsWith('../') &&
+                relativePath !== '.'
+            ) {
+              relativePath = `./${relativePath}`
+            }
             //cjs
             if (!imports.length && !exports.length) {
               const res = require(entryPath)
               const specifiers = Object.keys(res);
               proxyModule.push(
-                  `export { ${specifiers.join(",")} } from "${entryPath}"`,
-                  `export default require("${entryPath}")`
+                  `export { ${specifiers.join(",")} } from "${relativePath}"`,
+                  `export default require("${relativePath}")`
               );
             } else {
               // esm 格式比较好处理，export * 或者 export default 即可
               if (exports.includes("default")) {
-                proxyModule.push(`import d from "${entryPath}";export default d`);
+                proxyModule.push(`import d from "${relativePath}";export default d`);
               }
-              proxyModule.push(`export * from "${entryPath}"`);
+              proxyModule.push(`export * from "${relativePath}"`);
             }
 
             debug("代理模块内容: %o", proxyModule.join("\n"));
@@ -71,7 +81,6 @@ export function preBundlePlugin(deps: Set<string>): Plugin {
               contents: proxyModule.join("\n"),
               resolveDir: root,
             };
-
           }
       )
     }

@@ -4,12 +4,46 @@ import connect from 'connect';
 // picocolors 是一个用来在命令行显示不同颜色文本的工具
 import { blue, green } from 'picocolors';
 import { optimizer } from '../optimizer'
+import { createPluginContainer, PluginContainer } from '../pluginContainer'
+import { resolvePlugins } from '../plugins'
+import { Plugin } from "../plugin";
+import { indexHtmlMiddle } from './middlewares/indexHtml'
+import { transformMiddleware } from './middlewares/transform'
 
+export interface ServerContext {
+  root: string;
+  pluginContainer: PluginContainer;
+  app: connect.Server;
+  plugins: Plugin[];
+}
 
 export async function startDevServer() {
   const app = connect()
   const root = process.cwd()
   const startTime = performance.now()
+
+  // 模拟rollup插件机制
+  const plugins = resolvePlugins()
+  const pluginContainer = createPluginContainer(plugins)
+
+  const serverContext: ServerContext = {
+    root: process.cwd(),
+    app,
+    pluginContainer,
+    plugins
+  }
+  for (const plugin of plugins) {
+    if (plugin.configureServer) {
+      await plugin.configureServer(serverContext)
+    }
+  }
+
+  // html中间件
+  app.use(indexHtmlMiddle(serverContext))
+
+  // js插件
+  app.use(transformMiddleware(serverContext))
+
   app.listen(3000, async () => {
     await optimizer(root)
 
@@ -19,3 +53,6 @@ export async function startDevServer() {
     console.log(`> 本地访问路径：${ blue('http://localhost:3000') }`)
   })
 }
+
+
+
