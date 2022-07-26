@@ -33,7 +33,7 @@ export const createPluginContainer = (plugins: Plugin[]): PluginContainer => {
       const ctx = new Context() as any
       for (const plugin of plugins) {
         if (plugin.resolveId) {
-          const newId = await plugin.resolveId.call(ctx as any, id, importer)
+          const newId = await plugin.resolveId.call(ctx, id, importer)
           if (newId) {
             id = typeof newId === 'string' ? newId : newId.id
             return { id }
