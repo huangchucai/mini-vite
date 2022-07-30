@@ -7,6 +7,9 @@ import MagicString from 'magic-string';
 import { BARE_IMPORT_RE, PRE_BUNDLE_DIR } from '../constants'
 import path from 'path'
 
+/**
+ * @returns {Plugin}
+ */
 export function importAnalysisPlugin(): Plugin {
   let serverContext: ServerContext;
 

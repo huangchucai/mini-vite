@@ -5,6 +5,16 @@ import { pathExists } from 'fs-extra'
 import resolve from 'resolve'
 import { DEFAULT_EXTERSIONS } from '../constants'
 
+/**
+ * 获取文件的绝对路径
+ * @returns {Plugin}
+ * /src/main.tsx  -> {id: D:\study\miniVite\playground\src\main.tsx }
+ * ./App -> { id: ./App.tsx }
+ * /node_modules/.m-vite/react.js  -> {id: D:\study\miniVite\playground\node_modules\.m-vite\react.js}
+ *          |
+ *
+ * /node_modules/.m-vite/react-dom.js
+ */
 export function resolvePlugin(): Plugin {
   let serverContext: ServerContext
   return {

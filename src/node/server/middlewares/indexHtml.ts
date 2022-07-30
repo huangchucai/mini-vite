@@ -14,7 +14,7 @@ export function indexHtmlMiddle(
         const rawHtml = await readFile(indexHtmlPath, 'utf-8')
         let html = rawHtml
         for (const plugin of serverContext.plugins) {
-          if (plugin.transformIndexHtml) {
+          if (plugin.transformIndexHtml) { // 转换html文件
             html = await plugin.transformIndexHtml(html)
           }
         }
