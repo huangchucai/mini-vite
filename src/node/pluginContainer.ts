@@ -11,7 +11,7 @@ import type { PluginContext } from 'rollup'
 export interface PluginContainer {
   resolveId(id: string, importer?: string): Promise<PartialResolvedId | null>; // 异步优先钩子
   load(id: string): Promise<LoadResult | null>; //异步优先钩子
-  transform(this: PluginContext,code: string, id: string): Promise<LoadResult  | null>; // 异步串行钩子
+  transform(code: string, id: string): Promise<LoadResult  | null>; // 异步串行钩子
 }
 
 // 模拟 Rollup 的插件机制

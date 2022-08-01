@@ -29,3 +29,11 @@ export const isCSSRequest = (id: string): boolean =>
 
 export const cleanUrl = (url: string): string =>
     url.replace(HASH_RE, "").replace(QUERY_RE, "");
+
+export function isImportRequest(url: string): boolean {
+  return url.endsWith("?import");
+}
+
+export function removeImportQuery(url: string): string {
+  return url.replace(/\?import$/, "");
+}

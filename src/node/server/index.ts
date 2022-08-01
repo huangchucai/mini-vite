@@ -9,6 +9,7 @@ import { resolvePlugins } from '../plugins'
 import { Plugin } from "../plugin";
 import { indexHtmlMiddle } from './middlewares/indexHtml'
 import { transformMiddleware } from './middlewares/transform'
+import { staticMiddleware } from './middlewares/static'
 
 export interface ServerContext {
   root: string;
@@ -43,6 +44,9 @@ export async function startDevServer() {
 
   // js插件
   app.use(transformMiddleware(serverContext))
+
+  // 静态资源
+  app.use(staticMiddleware())
 
   app.listen(3000, async () => {
     await optimizer(root)

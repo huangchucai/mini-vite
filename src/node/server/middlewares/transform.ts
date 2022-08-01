@@ -4,8 +4,8 @@
 import { ServerContext } from '../index'
 import { NextHandleFunction } from 'connect'
 import createDebug from 'debug';
-import { cleanUrl, isJSRequest, isCSSRequest } from '../../utils'
-import { SourceDescription } from 'rollup'
+import { cleanUrl, isJSRequest, isCSSRequest, isImportRequest } from '../../utils'
+import { LoadResult } from 'rollup'
 
 const debug = createDebug('dev');
 
@@ -48,8 +48,8 @@ export function transformMiddleware(
     debug('transformMiddleware: %s', url);
 
     // transform JS request
-    if (isJSRequest(url) || isCSSRequest(url)) {
-      let result: SourceDescription | null | undefined | string = await transformRequest(url, serverContext);
+    if (isJSRequest(url) || isCSSRequest(url) || isImportRequest(url)) {
+      let result: LoadResult | null | undefined | string = await transformRequest(url, serverContext);
       if (!result) {
         return next()
       }
