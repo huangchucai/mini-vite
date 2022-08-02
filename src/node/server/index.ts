@@ -6,16 +6,19 @@ import { blue, green } from 'picocolors';
 import { optimizer } from '../optimizer'
 import { createPluginContainer, PluginContainer } from '../pluginContainer'
 import { resolvePlugins } from '../plugins'
-import { Plugin } from "../plugin";
+import { Plugin } from '../plugin';
 import { indexHtmlMiddle } from './middlewares/indexHtml'
 import { transformMiddleware } from './middlewares/transform'
 import { staticMiddleware } from './middlewares/static'
+import { ModuleGraph } from '../ModuleGraph'
+
 
 export interface ServerContext {
   root: string;
   pluginContainer: PluginContainer;
   app: connect.Server;
   plugins: Plugin[];
+  moduleGraph: ModuleGraph
 }
 
 export async function startDevServer() {
@@ -25,13 +28,17 @@ export async function startDevServer() {
 
   // 模拟rollup插件机制
   const plugins = resolvePlugins()
-  const pluginContainer = createPluginContainer(plugins)
+  const moduleGraph = new ModuleGraph((url, importer) => pluginContainer.resolveId(url, importer))
 
+  const pluginContainer = createPluginContainer(plugins)
+  // 模块依赖图
+  // @ts-ignore
   const serverContext: ServerContext = {
     root: process.cwd(),
     app,
     pluginContainer,
-    plugins
+    plugins,
+    moduleGraph
   }
   for (const plugin of plugins) {
     if (plugin.configureServer) {

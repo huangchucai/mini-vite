@@ -15,7 +15,6 @@ export function staticMiddleware(): NextHandleFunction {
       return;
     }
 
-    let a= path.resolve('/')
     serveFromRoot(req, res, next);
   }
 }

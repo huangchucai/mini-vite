@@ -18,12 +18,12 @@ import { DEFAULT_EXTERSIONS } from '../constants'
 export function resolvePlugin(): Plugin {
   let serverContext: ServerContext
   return {
-    name: 'm-vite: resolve',
+    name: 'm-vite:resolve',
     configureServer(s) {
       // 保存服务端上下文
       serverContext = s
     },
-    async resolveId(id, importer) {
+    async resolveId(id: string, importer?: string) {
       //1， 绝对路径
       if (path.isAbsolute(id)) {
         if (await pathExists(id)) {
@@ -38,6 +38,7 @@ export function resolvePlugin(): Plugin {
       //2. 相对路径
       else if (id.startsWith('.')) {
         if (!importer) {
+          // importer = path.join(serverContext.root, 'src', 'main.tsx')
           throw new Error('`importer` should not be undefined')
         }
         const hasExtension = path.extname(id).length > 1;
@@ -57,7 +58,7 @@ export function resolvePlugin(): Plugin {
                 basedir: path.dirname(importer),
               });
               if (await pathExists(resolvedId)) {
-                return { id: withExtension  };
+                return { id: withExtension };
               }
             } catch (e) {
               continue;
