@@ -1,5 +1,5 @@
 import connect from 'connect'
-import { WebSocketServer } from 'ws'
+import { WebSocketServer, WebSocket } from 'ws'
 import { HMR_PORT } from './constants'
 import { red } from 'picocolors'
 

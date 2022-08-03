@@ -59,7 +59,9 @@ export function transformMiddleware(
     debug('transformMiddleware: %s', url);
 
     // transform JS request
-    if (isJSRequest(url) || isCSSRequest(url) || isImportRequest(url)) {
+    if (isJSRequest(url) || isCSSRequest(url) ||
+        // 静态资源的 import 请求，如 import logo from './logo.svg';
+        isImportRequest(url)) {
       let result = await transformRequest(url, serverContext);
       if (!result) {
         return next()
