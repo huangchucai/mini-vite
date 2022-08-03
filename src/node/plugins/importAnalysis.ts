@@ -87,7 +87,6 @@ export function importAnalysisPlugin(): Plugin {
         moduleGraph.updateModuleInfo(curMod, importedModules)
       }
 
-      debug('moduleGraph: %s', moduleGraph);
 
       return {
         code: ms.toString(),

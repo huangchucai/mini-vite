@@ -4,6 +4,7 @@ import { esbuildTransformPlugin } from './esbuild'
 import { importAnalysisPlugin } from './importAnalysis'
 import { cssPlugin } from './css'
 import { assetPlugin } from './assets'
+import { clientInjectPlugin } from './clientInject'
 
 export function resolvePlugins(): Plugin[] {
   // todo: 插件机制
@@ -12,7 +13,8 @@ export function resolvePlugins(): Plugin[] {
     esbuildTransformPlugin(),
     importAnalysisPlugin(),
     cssPlugin(),
-    assetPlugin()
+    assetPlugin(),
+    clientInjectPlugin()
   ];
 }
 

@@ -50,7 +50,7 @@ export function transformMiddleware(
     serverContext: ServerContext
 ): NextHandleFunction {
   return async (req, res, next) => {
-    if (req.method !== 'GET' || !req.url) {
+    if (req.method !== 'GET' || !req.url || req.url === '/null') {
       return next()
     }
 
