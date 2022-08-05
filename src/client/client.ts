@@ -31,6 +31,31 @@ const hotModulesMap = new Map<string, HotModule>();
 // 不在生效的模块表
 const pruneMap = new Map<string, (data: any) => void | Promise<void>>();
 
+// css热更新
+const sheetsMap = new Map()
+
+export function updateStyle(id: string, content: string) {
+  let style = sheetsMap.get(id)
+  if(!style) {
+    style = document.createElement("style")
+    style.setAttribute("type", "text/css");
+    style.innerHTML = content;
+    document.head.appendChild(style);
+  } else {
+    // 更新 style 标签内容
+    style.innerHTML = content;
+  }
+  sheetsMap.set(id, style);
+}
+
+
+export function removeStyle(id: string): void {
+  const style = sheetsMap.get(id);
+  if (style) {
+    document.head.removeChild(style);
+  }
+  sheetsMap.delete(id);
+}
 
 export const createHotContext = (ownerPath: string) => {
   const mod = hotModulesMap.get(ownerPath)
@@ -38,6 +63,11 @@ export const createHotContext = (ownerPath: string) => {
     mod.callbacks = [];
   }
 
+
+  /**
+   * @param {string[]} deps string 路径
+   * @param callback
+   */
   function acceptDeps(deps: string[], callback: any) {
     const mod: HotModule = hotModulesMap.get(ownerPath) || {
       id: ownerPath,

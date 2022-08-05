@@ -3,6 +3,9 @@ import { ServerContext } from '../server'
 import { CLIENT_PUBLIC_PATH, HMR_PORT } from '../constants'
 import path from 'path'
 import fs from 'fs-extra'
+import createDebug  from 'debug'
+
+const debug = createDebug('dev')
 
 export function clientInjectPlugin(): Plugin {
   let serverContext: ServerContext
@@ -26,6 +29,7 @@ export function clientInjectPlugin(): Plugin {
             "dist",
             "client.mjs"
         )
+        debug(`realPath`, realPath)
         const code = await fs.readFile(realPath, "utf-8");
         return {
           // 替换占位符

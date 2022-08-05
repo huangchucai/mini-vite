@@ -1,14 +1,14 @@
 import { ServerContext } from './server'
 import { blue, green } from 'picocolors'
 import { getShortName } from './utils'
+import path from 'node:path'
 
 export function bindingHMREvents(serverContext: ServerContext) {
   const { watcher, ws, root } = serverContext
 
   watcher.on('change', async (file) => {
     console.log(`✨${blue("[hmr]")} ${green(file)} changed`);
-    console.log(`${getShortName(file, root)}`);
-
+    console.log(`${getShortName(file, root)}`); // /src/main.tsx
     const  { moduleGraph } = serverContext
 
     // 清除模块依赖图中的缓存

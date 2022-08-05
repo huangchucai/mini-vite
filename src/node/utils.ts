@@ -1,6 +1,7 @@
 import os from 'node:os'
 import path from 'node:path'
 import { CLIENT_PUBLIC_PATH, HASH_RE, JS_TYPES_RE, QUERY_RE } from './constants'
+import { blue, green } from 'picocolors'
 
 
 export function slash(p: string): string {
@@ -40,7 +41,8 @@ export function removeImportQuery(url: string): string {
 
 
 export function getShortName(file: string, root: string) {
-  return file.startsWith(root + "/") ? path.posix.relative(root, file) : file;
+  let symbol = isWindows ? "\\" : '/'
+  return file.startsWith(root + `${symbol}` ) ? normalizePath(path.relative(root, file)) : file;
 }
 
 const INTERNAL_LIST = [CLIENT_PUBLIC_PATH, "/@react-refresh"];

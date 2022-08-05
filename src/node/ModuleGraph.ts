@@ -75,7 +75,7 @@ export class ModuleGraph {
     }
   }
 
-  //HMR 触发时会执行这个方法
+  //HMR 触发时会执行这个方法, 清空之前的缓存数据
   invalidateModule(file: string) {
     const mod = this.idToModuleMap.get(file);
     if (mod) {

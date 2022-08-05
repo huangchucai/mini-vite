@@ -5,7 +5,7 @@ import "./index.css";
 
 // ReactDOM.render(<App />, document.getElementById("root"));
 
-const App = () => <div>hello 123123456</div>;
+const App = () => <div>hello 123123</div>;
 
 ReactDOM.render(<App />, document.getElementById("root"));
 
